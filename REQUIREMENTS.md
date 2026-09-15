@@ -12,9 +12,9 @@ The application is intended for student engineering projects such as electrical 
 
 ---
 
-#                  User Stories               #
+# User Stories
 
-## US-01 — Create a Project
+## USER-01 — Create a Project
 
 **As a** student working on an engineering project,  
 **I want** to create a project with a name and budget,  
@@ -32,7 +32,7 @@ with that project.
 
 ---
 
-## US-02 — Add a Component
+## USER-02 — Add a Component
 
 **As a** project user,  
 **I want** to add components to a project,  
@@ -50,7 +50,7 @@ with that project.
 
 ---
 
-## US-03 — Calculate Component Cost
+## USER-03 — Calculate Component Cost
 
 **As a** project user,  
 **I want** the application to calculate the total cost of each
@@ -68,7 +68,7 @@ price manually.
 
 ---
 
-## US-04 — View Total Project Cost
+## USER-04 — View Total Project Cost
 
 **As a** project user,  
 **I want** to see the total cost of all components in my project,  
@@ -85,7 +85,7 @@ price manually.
 
 ---
 
-## US-05 — Compare Cost to Budget
+## USER-05 — Compare Cost to Budget
 
 **As a** project user,  
 **I want** the application to compare my project cost to my budget,  
@@ -101,7 +101,7 @@ price manually.
 
 ---
 
-## US-06 — Track Component Status
+## USER-06 — Track Component Status
 
 **As a** project user,  
 **I want** to assign a status to each component,  
@@ -121,7 +121,7 @@ installation process.
 
 ---
 
-## US-07 — Edit or Remove Components
+## USER-07 — Edit or Remove Components
 
 **As a** project user,  
 **I want** to edit or remove existing components,  
