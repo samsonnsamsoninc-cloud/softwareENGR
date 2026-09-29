@@ -1,0 +1,39 @@
+classDiagram
+    direction LR
+
+    class Project {
+        -projectId: int
+        -name: String
+        -budget: Decimal
+        +addComponent(component: Component): void
+        +removeComponent(componentId: int): void
+        +getTotalCost(): Decimal
+        +getRemainingBudget(): Decimal
+        +getAmountOverBudget(): Decimal
+    }
+
+    class Component {
+        -componentId: int
+        -name: String
+        -quantity: int
+        -unitCost: Decimal
+        -status: ComponentStatus
+        +getTotalCost(): Decimal
+        +updateDetails(name: String, quantity: int, unitCost: Decimal): void
+        +setStatus(status: ComponentStatus): void
+    }
+
+    class ComponentStatus {
+        <<enumeration>>
+        Needed
+        Ordered
+        Received
+        Installed
+        Tested
+    }
+
+    Project "1" *-- "0..*" Component : contains
+    Component --> ComponentStatus : uses
+
+    note for Project "Project name cannot be blank; budget must be positive"
+    note for Component "Quantity must be at least 1; unit cost cannot be negative; status defaults to Needed"

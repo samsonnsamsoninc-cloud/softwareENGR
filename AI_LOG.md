@@ -131,3 +131,39 @@ for the current scope of my application.
 I kept my original performance requirement because it was simpler and
 easier to test. The report export idea could be considered as a future
 feature.
+
+# M3 — Domain Model and AI Critique
+
+## AI Tool
+
+Visual Studio Code AI Chat
+
+## Date
+
+September 28, 2026
+
+## Prompt
+
+Read the M2 requirements in REQUIREMENTS.md for my Engineering Project Component & Budget Tracker.
+
+Draft a domain model for the application as a Mermaid class diagram. Include the proposed classes, important attributes, operations, relationships, and multiplicities.
+
+Generate the model independently from the M2 requirements. Do not modify any project files, do not critique the model, and do not revise it. This must be the original first draft.
+
+## AI First Draft
+
+The AI’s unchanged first draft is saved in `docs/M3_AI_FIRST_DRAFT.md`. It proposed ProjectBudgetTracker, Project, Component, and ComponentStatus. It also proposed relationships showing that the tracker manages projects and that each project contains zero or more components.
+
+## Changes Made
+
+- Removed ProjectBudgetTracker because it represents an application controller rather than a domain entity required by M2.
+- Removed removeProject() because M2 requires removing components, not entire projects.
+- Removed setBudget() because M2 does not require editing a project budget after creation.
+- Added projectId and componentId so existing projects and components can be selected unambiguously.
+- Replaced the separate component setters with updateDetails() to represent USER-07 more clearly.
+- Added validation notes for blank names, positive budgets, quantities of at least one, nonnegative costs, and the default Needed status.
+- Kept Project, Component, ComponentStatus, the one-to-many composition, and the cost and budget calculations because they directly trace to M2.
+
+## Result
+
+The final model is saved as `docs/M3_DOMAIN_MODEL.mmd`, and its diagram image is saved as `docs/M3_DOMAIN_MODEL.png`. The detailed comparison is saved in `docs/M3_CRITIQUE.md`.
