@@ -167,3 +167,37 @@ The AI’s unchanged first draft is saved in `docs/M3_AI_FIRST_DRAFT.md`. It pro
 ## Result
 
 The final model is saved as `docs/M3_DOMAIN_MODEL.mmd`, and its diagram image is saved as `docs/M3_DOMAIN_MODEL.png`. The detailed comparison is saved in `docs/M3_CRITIQUE.md`.
+
+
+# M4 — ADR-001 Prompt-and-Diff Log
+
+## AI Tool
+
+Visual Studio Code AI Chat
+
+## Date
+
+September 28, 2026
+
+## Prompt
+
+Draft ADR-001 for my Engineering Project Component and Budget Tracker. Record the decision to represent budgets, component costs, and calculated totals with Python Decimal instead of float or integer cents.
+
+Include context, an unambiguous decision, at least two genuine alternatives with reasons they were rejected, and positive and negative consequences. Connect the decision to the M2 requirement that monetary calculations be accurate to $0.01.
+
+## AI Draft
+
+The AI proposed using Decimal for all monetary values, with float and integer cents as the two alternatives.
+
+## Changes Made
+
+- Clarified that user input must be converted from strings directly to Decimal.
+- Added a rule prohibiting mixed float and Decimal calculations.
+- Explained why float could violate the M2 accuracy requirement.
+- Added integer cents as a genuine alternative and explained its conversion cost.
+- Added negative consequences involving JSON serialization, input conversion, testing, and future migration.
+- Confirmed that this was consistent with the Decimal type selected in the M3 domain model.
+
+## Result
+
+The reviewed ADR is saved in `docs/adr/ADR-001-money-representation.md`.
