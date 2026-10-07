@@ -14,3 +14,27 @@ This project is an Interactive Application Project (IAP) for my Software Enginee
 - **Repository Hosting:** GitHub
 - **Development Environment:** Visual Studio Code
 - **AI Coding Tool:** Visual Studio Code AI Chat
+
+## M5 Walking Skeleton
+
+The first end-to-end slice creates a project through the command line, stores
+it in a JSON file, and loads it back for display. Monetary values use
+`Decimal`, following ADR-001.
+
+Create a project:
+
+```powershell
+python app.py --data-file demo_projects.json create --name "Senior Design" --budget 500.00
+```
+
+Load and display the saved project:
+
+```powershell
+python app.py --data-file demo_projects.json list
+```
+
+Run the automated tests:
+
+```powershell
+python -m pytest -v
+```

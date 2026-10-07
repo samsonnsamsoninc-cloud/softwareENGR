@@ -201,3 +201,48 @@ The AI proposed using Decimal for all monetary values, with float and integer ce
 ## Result
 
 The reviewed ADR is saved in `docs/adr/ADR-001-money-representation.md`.
+
+
+# M5 — Walking Skeleton Prompt-and-Diff Log
+
+## AI Tool
+
+ChatGPT Codex
+
+## Date
+
+October 6, 2026
+
+## Prompt
+
+Follow my GitHub repository and previous IAP assignments to create the code for
+M5. Implement one real thin slice of the Engineering Project Component and
+Budget Tracker end to end, configure continuous integration, and then walk me
+through where and how to create it.
+
+## AI Draft
+
+The AI proposed a command-line thin slice that creates a project with a name
+and budget, validates it with a domain object, stores it in a JSON file, and
+loads it again for display. It also proposed an end-to-end pytest and a GitHub
+Actions workflow containing both a Python build check and test invocation.
+
+## Changes Made and Reviewed
+
+- Preserved the original `project_status()` function and M1 test.
+- Selected USER-01 from M2 as the smallest complete feature.
+- Used `Decimal` for budgets to follow ADR-001 and serialized it as a JSON
+  string to avoid losing decimal accuracy.
+- Separated the command-line edge, domain object, and JSON repository so the
+  slice crosses real application layers.
+- Added validation for blank project names and nonpositive budgets.
+- Added an end-to-end test that launches the real CLI, checks the JSON file,
+  and launches the CLI again to read the project back.
+- Added GitHub Actions steps that compile the Python files and run pytest.
+- Excluded local demonstration data files from Git.
+
+## Result
+
+The M5 slice accepts real command-line input, writes a real JSON storage file,
+and returns stored project data through the command-line output. The CI
+workflow is located at `.github/workflows/ci.yml`.

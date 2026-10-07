@@ -14,3 +14,7 @@ __pycache__/
 
 # Windows files
 Thumbs.db
+
+# Local application data
+projects.json
+demo_projects.json
