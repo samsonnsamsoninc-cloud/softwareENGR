@@ -246,3 +246,46 @@ Actions workflow containing both a Python build check and test invocation.
 The M5 slice accepts real command-line input, writes a real JSON storage file,
 and returns stored project data through the command-line output. The CI
 workflow is located at `.github/workflows/ci.yml`.
+
+
+# IAP M6 — Tests and Bug-Injection Demonstration
+
+## Prompt Given to the AI
+
+Review the M5 project-creation walking skeleton for the Engineering
+Project Component and Budget Tracker. Help me add an acceptance test,
+unit tests, coverage reporting, and a controlled one-line bug-injection
+demonstration. The suite must fail with the injected fault and pass
+after restoring the correct code.
+
+## AI Suggestions
+
+The AI recommended retaining the subprocess acceptance test and adding
+unit tests for domain validation, Decimal input, repository persistence,
+ID assignment, invalid JSON, and CLI behavior. It recommended pytest-cov
+for coverage and changing `budget <= 0` to `budget < 0` as the temporary
+fault.
+
+## Changes Accepted
+
+- Added acceptance and unit tests.
+- Added explicit zero-budget validation testing.
+- Added pytest-cov.
+- Updated GitHub Actions to run coverage.
+- Preserved the fault diff and failing test output.
+- Restored the correct validation and preserved the passing output.
+
+## Diff Summary
+
+- Modified `test_app.py`.
+- Modified `requirements.txt`.
+- Modified `.github/workflows/ci.yml`.
+- Modified `.gitignore`.
+- Added M6 evidence under `docs/m6/`.
+- Updated `AI_LOG.md`.
+
+## Verification
+
+The faulty version failed one zero-budget test while 16 tests passed.
+After restoring the correct condition, all 17 tests passed with
+99 percent total coverage.

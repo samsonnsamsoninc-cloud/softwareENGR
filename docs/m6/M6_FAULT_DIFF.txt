@@ -1,0 +1,13 @@
+﻿diff --git a/domain.py b/domain.py
+index cf9f059..12fc944 100644
+--- a/domain.py
++++ b/domain.py
+@@ -16,7 +16,7 @@ class Project:
+         cleaned_name = self.name.strip()
+         if not cleaned_name:
+             raise ValueError("project name cannot be blank")
+-        if not self.budget.is_finite() or self.budget <= 0:
++        if not self.budget.is_finite() or self.budget < 0:
+             raise ValueError("budget must be greater than zero")
+ 
+         object.__setattr__(self, "name", cleaned_name)
