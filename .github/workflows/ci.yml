@@ -23,5 +23,6 @@ jobs:
       - name: Build check
         run: python -m compileall app.py domain.py project_repository.py
 
-      - name: Run tests
-        run: python -m pytest -v
+      - name: Run tests with coverage
+        run: python -m pytest -v --cov=app --cov=domain --cov=project_repository --cov-report=term-missing
+
