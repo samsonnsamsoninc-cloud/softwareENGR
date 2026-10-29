@@ -56,34 +56,54 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser("list", help="list saved projects")
     return parser
 
+def handle_create_command(
+    repository: JsonProjectRepository,
+    name: str,
+    budget: Decimal,
+) -> int:
+    """Create one project and report the result to the CLI user."""
+    try:
+        project = repository.create(name, budget)
+    except ValueError as exc:
+        print(f"Error: {exc}")
+        return 1
 
-def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    repository = JsonProjectRepository(args.data_file)
+    print(
+        f'Created project #{project.project_id}: "{project.name}" '
+        f"with budget ${project.budget:.2f}"
+    )
+    return 0
 
-    if args.command == "create":
-        try:
-            project = repository.create(args.name, args.budget)
-        except ValueError as exc:
-            print(f"Error: {exc}")
-            return 1
 
-        print(
-            f'Created project #{project.project_id}: "{project.name}" '
-            f"with budget ${project.budget:.2f}"
-        )
-        return 0
-
+def handle_list_command(repository: JsonProjectRepository) -> int:
+    """Display all stored projects to the CLI user."""
     projects = repository.list_all()
+
     if not projects:
         print("No projects found.")
         return 0
 
     print("Saved projects:")
     for project in projects:
-        print(f'{project.project_id}: {project.name} | Budget: ${project.budget:.2f}')
+        print(
+            f"{project.project_id}: {project.name} | "
+            f"Budget: ${project.budget:.2f}"
+        )
+
     return 0
 
+def main(argv: Sequence[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    repository = JsonProjectRepository(args.data_file)
+
+    if args.command == "create":
+        return handle_create_command(
+            repository,
+            args.name,
+            args.budget,
+        )
+
+    return handle_list_command(repository)
 
 if __name__ == "__main__":
     raise SystemExit(main())
