@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import json
+import sys
+from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Sequence
+from uuid import uuid4
 
 from project_repository import JsonProjectRepository
 
@@ -56,32 +60,27 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser("list", help="list saved projects")
     return parser
 
+
 def handle_create_command(
     repository: JsonProjectRepository,
     name: str,
     budget: Decimal,
-) -> int:
+) -> None:
     """Create one project and report the result to the CLI user."""
-    try:
-        project = repository.create(name, budget)
-    except ValueError as exc:
-        print(f"Error: {exc}")
-        return 1
-
+    project = repository.create(name, budget)
     print(
         f'Created project #{project.project_id}: "{project.name}" '
         f"with budget ${project.budget:.2f}"
     )
-    return 0
 
 
-def handle_list_command(repository: JsonProjectRepository) -> int:
+def handle_list_command(repository: JsonProjectRepository) -> None:
     """Display all stored projects to the CLI user."""
     projects = repository.list_all()
 
     if not projects:
         print("No projects found.")
-        return 0
+        return
 
     print("Saved projects:")
     for project in projects:
@@ -90,20 +89,49 @@ def handle_list_command(repository: JsonProjectRepository) -> int:
             f"Budget: ${project.budget:.2f}"
         )
 
-    return 0
+
+def log_command_event(
+    event: str,
+    operation_id: str,
+    command: str,
+    data_file: Path,
+    error: Exception | None = None,
+) -> None:
+    """Write one JSON event to stderr, separately from the CLI output."""
+    record = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "level": "ERROR" if error is not None else "INFO",
+        "event": event,
+        "operation_id": operation_id,
+        "command": command,
+        "data_file": str(data_file),
+        "error_type": type(error).__name__ if error is not None else None,
+    }
+    sys.stderr.write(json.dumps(record) + "\n")
+    sys.stderr.flush()
+
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     repository = JsonProjectRepository(args.data_file)
+    operation_id = uuid4().hex
+    log_command_event("command_started", operation_id, args.command, args.data_file)
 
-    if args.command == "create":
-        return handle_create_command(
-            repository,
-            args.name,
-            args.budget,
+    try:
+        if args.command == "create":
+            handle_create_command(repository, args.name, args.budget)
+        else:
+            handle_list_command(repository)
+    except (ValueError, OSError) as error:
+        log_command_event(
+            "command_failed", operation_id, args.command, args.data_file, error
         )
+        print(f"Error: {error}")
+        return 1
 
-    return handle_list_command(repository)
+    log_command_event("command_succeeded", operation_id, args.command, args.data_file)
+    return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

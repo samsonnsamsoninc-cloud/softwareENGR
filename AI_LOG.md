@@ -289,3 +289,45 @@ fault.
 The faulty version failed one zero-budget test while 16 tests passed.
 After restoring the correct condition, all 17 tests passed with
 99 percent total coverage.
+
+# IAP M8 — Structured Logging and Runbook Prompt-and-Diff Log
+
+## AI Tool
+
+ChatGPT Codex
+
+## Prompt
+
+“M8. Here is IAPM8 complete it. Walk me through all the steps.”
+
+The attached assignment called for machine-parseable structured logs, an
+identifier that follows one operation across log lines, an operator-facing
+runbook, sample log lines, the repository URL, and this prompt-and-diff log.
+
+## AI Approach and Changes
+
+- `app.py` adds JSON Lines events to standard error. One UUID follows each
+  parsed `create` or `list` command from its start event to its success or
+  handled failure event. All events share the same seven fields. Normal CLI
+  output stays on standard output. JSON syntax errors now get a structured
+  failure event and a readable error with exit code 1 on both commands.
+- `test_app.py` checks JSON parsing, the field set, the UTC timestamp, the
+  operation ID, different IDs across commands, and success and malformed
+  data outcomes. The malformed-file test checks that the input stays intact.
+- `docs/m8/RUNBOOK.md` starts with saved projects failing to display and
+  documents how to confirm the syntax error, preserve the damaged file,
+  validate and restore a backup, and verify recovery.
+- `docs/m8/SAMPLE_LOGS.jsonl` contains actual standard error from two CLI
+  runs against disposable data. The first two lines trace a successful
+  `create`. The next two trace a `list` failure on malformed JSON. Match
+  records by `operation_id`.
+
+The code diff is available in Git with `git show HEAD -- app.py test_app.py`
+when the M8 commit is checked out.
+
+## Verification
+
+The Python build check passed. Pytest passed all 19 tests with 99 percent
+total coverage. The evidence capture confirmed exit code 0 for `create`,
+exit code 1 for `list` on malformed JSON, and no modification to the
+damaged input.

@@ -1,0 +1,4 @@
+{"timestamp": "2026-11-03T22:41:30.014727+00:00", "level": "INFO", "event": "command_started", "operation_id": "36957686ce6243c5926640961f7752ca", "command": "create", "data_file": "m8-demo-projects.json", "error_type": null}
+{"timestamp": "2026-11-03T22:41:30.014998+00:00", "level": "INFO", "event": "command_succeeded", "operation_id": "36957686ce6243c5926640961f7752ca", "command": "create", "data_file": "m8-demo-projects.json", "error_type": null}
+{"timestamp": "2026-11-03T22:41:30.055304+00:00", "level": "INFO", "event": "command_started", "operation_id": "669faba8b2934f48b952e6aeed42b525", "command": "list", "data_file": "m8-bad-projects.json", "error_type": null}
+{"timestamp": "2026-11-03T22:41:30.055439+00:00", "level": "ERROR", "event": "command_failed", "operation_id": "669faba8b2934f48b952e6aeed42b525", "command": "list", "data_file": "m8-bad-projects.json", "error_type": "JSONDecodeError"}

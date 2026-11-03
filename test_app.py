@@ -2,8 +2,10 @@ import argparse
 import json
 import subprocess
 import sys
+from datetime import datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
+from uuid import UUID
 
 import pytest
 
@@ -65,6 +67,51 @@ def test_create_and_list_project_end_to_end(tmp_path):
 
     assert listed.returncode == 0
     assert "1: Senior Design | Budget: $500.00" in listed.stdout
+    create_trace = [json.loads(line) for line in created.stderr.splitlines()]
+    list_trace = [json.loads(line) for line in listed.stderr.splitlines()]
+    assert create_trace[0]["operation_id"] != list_trace[0]["operation_id"]
+
+
+@pytest.mark.parametrize("malformed", [False, True])
+def test_create_emits_correlated_json_events(tmp_path, malformed):
+    data_file = tmp_path / "projects.json"
+    original_text = '[{"project_id": 1,'
+    if malformed:
+        data_file.write_text(original_text, encoding="utf-8")
+
+    result = run_app(
+        "--data-file", str(data_file), "create", "--name", "Robot", "--budget", "100"
+    )
+
+    start, end = [json.loads(line) for line in result.stderr.splitlines()]
+    expected_fields = {
+        "timestamp", "level", "event", "operation_id",
+        "command", "data_file", "error_type",
+    }
+    for record in (start, end):
+        assert record.keys() == expected_fields
+        assert datetime.fromisoformat(record["timestamp"]).utcoffset() == timedelta(0)
+        assert record["command"] == "create"
+        assert record["data_file"] == str(data_file)
+        assert UUID(record["operation_id"]).version == 4
+
+    assert start["operation_id"] == end["operation_id"]
+    assert (start["event"], start["level"], start["error_type"]) == (
+        "command_started", "INFO", None
+    )
+
+    if malformed:
+        assert result.returncode == 1
+        assert "Error:" in result.stdout
+        assert data_file.read_text(encoding="utf-8") == original_text
+        assert (end["event"], end["level"], end["error_type"]) == (
+            "command_failed", "ERROR", "JSONDecodeError"
+        )
+    else:
+        assert result.returncode == 0
+        assert (end["event"], end["level"], end["error_type"]) == (
+            "command_succeeded", "INFO", None
+        )
 
 
 @pytest.mark.parametrize("name", ["", "   "])
